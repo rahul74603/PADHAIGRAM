@@ -1,26 +1,89 @@
-<script>
-async function fetchJobs() {
-    const url = 'https://hiringpkblog.p.rapidapi.com/api/jobs'; 
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': 'YOUR_API_KEY_HERE',  // अपनी API Key डालें
-            'X-RapidAPI-Host': 'hiringpkblog.p.rapidapi.com'
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सरकारी नौकरियाँ - PadhaiGram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
         }
-    };
+        h1 {
+            color: #007bff;
+        }
+        #jobs {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+        }
+        .job-card {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .job-card h3 {
+            margin: 0;
+            color: #333;
+        }
+        .job-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .job-card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
 
-    try {
-        const response = await fetch(url, options);
-        const jobs = await response.json();
-        let jobList = '<ul>';
-        jobs.forEach(job => {
-            jobList += `<li><strong>${job.title}</strong> - <a href="${job.link}" target="_blank">Apply Now</a></li>`;
-        });
-        jobList += '</ul>';
-        document.getElementById("jobs-container").innerHTML = jobList;
-    } catch (error) {
-        console.error(error);
-        document.getElementById("jobs-container").innerHTML = "Error fetching jobs.";
-    }
-}
-</script>
+    <h1>🔥 लाइव सरकारी नौकरियाँ 🔥</h1>
+    <div id="jobs">Loading jobs...</div>
+
+    <script>
+        async function fetchJobs() {
+            const url = 'https://govt-job-at-hiringpkblog.p.rapidapi.com/';
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': '7c2298fe38msh5fa7df0e5c63f13p1bad0djsndc11b07500d6',
+                    'X-RapidAPI-Host': 'govt-job-at-hiringpkblog.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+
+                let jobsHTML = '';
+                data.forEach(job => {
+                    jobsHTML += `
+                        <div class="job-card">
+                            <h3>${job.title}</h3>
+                            <p><strong>Department:</strong> ${job.department}</p>
+                            <p><strong>Location:</strong> ${job.location}</p>
+                            <p><strong>Last Date:</strong> ${job.last_date}</p>
+                            <a href="${job.link}" target="_blank">Apply Now</a>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('jobs').innerHTML = jobsHTML;
+            } catch (error) {
+                document.getElementById('jobs').innerHTML = "❌ जॉब लोड करने में समस्या आई!";
+                console.error(error);
+            }
+        }
+
+        fetchJobs();
+    </script>
+
+</body>
+</html>
