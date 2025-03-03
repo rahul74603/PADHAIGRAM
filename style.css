@@ -1,10 +1,14 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body {
-         font-family: Arial, sans-serif;
-         background-color: #f4f4f4;
-         text-align: center;
-         padding: 50px;
-     }
-     h1 {
-         color: #333;
-     }
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 50px;
+    margin: 0;
+}
+
+h1 {
+    color: #333;
+}
