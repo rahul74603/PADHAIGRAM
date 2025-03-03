@@ -1,0 +1,2 @@
+const API_KEY = "2ccc5ad5205dca2e7496ffe1d827bb432c2f5672";
+const SHEET_ID = "YOUR_GOOGLE_SHEET_ID";
