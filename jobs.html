@@ -9,9 +9,17 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
-        h1 {
-            color: #007bff;
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
         }
         #jobs {
             margin: 20px auto;
@@ -40,37 +48,69 @@
             color: #007bff;
             font-weight: bold;
         }
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🔥 लाइव सरकारी नौकरियाँ 🔥</h1>
+    <!-- Header Section -->
+    <header>
+        <h1>🔥 सरकारी नौकरियाँ - PadhaiGram 🔥</h1>
+    </header>
+
+    <!-- Jobs Section -->
     <div id="jobs">Loading jobs...</div>
 
+    <!-- Footer Section -->
+    <footer>
+        &copy; 2025 PadhaiGram | All Rights Reserved
+    </footer>
+
+    <!-- JavaScript to Fetch Jobs -->
     <script>
         async function fetchJobs() {
-            const url = 'https://govt-job-at-hiringpkblog.p.rapidapi.com/';
+            const url = 'https://govt-job-at-hiringpkblog.p.rapidapi.com/?Hiingpkblog=Job&Job=Job&GGovt=Gov';
             const options = {
                 method: 'GET',
                 headers: {
-                    'X-RapidAPI-Key': '7c2298fe38msh5fa7df0e5c63f13p1bad0djsndc11b07500d6',
+                    'X-RapidAPI-Key': '7c2298fe38msh5fa7df0e5c63f13p1bad0djsndc11b07500d6', // Replace with your actual API key
                     'X-RapidAPI-Host': 'govt-job-at-hiringpkblog.p.rapidapi.com'
                 }
             };
 
             try {
                 const response = await fetch(url, options);
+
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                console.log("API Response:", data);
+
+                // Check if data is an array
+                if (!Array.isArray(data)) {
+                    throw new Error("API response is not an array.");
+                }
 
                 let jobsHTML = '';
                 data.forEach(job => {
                     jobsHTML += `
                         <div class="job-card">
-                            <h3>${job.title}</h3>
-                            <p><strong>Department:</strong> ${job.department}</p>
-                            <p><strong>Location:</strong> ${job.location}</p>
-                            <p><strong>Last Date:</strong> ${job.last_date}</p>
-                            <a href="${job.link}" target="_blank">Apply Now</a>
+                            <h3>${job.title || 'N/A'}</h3>
+                            <p><strong>Department:</strong> ${job.department || 'N/A'}</p>
+                            <p><strong>Location:</strong> ${job.location || 'N/A'}</p>
+                            <p><strong>Last Date:</strong> ${job.last_date || 'N/A'}</p>
+                            <a href="${job.link || '#'}" target="_blank">Apply Now</a>
                         </div>
                     `;
                 });
@@ -78,10 +118,11 @@
                 document.getElementById('jobs').innerHTML = jobsHTML;
             } catch (error) {
                 document.getElementById('jobs').innerHTML = "❌ जॉब लोड करने में समस्या आई!";
-                console.error(error);
+                console.error("Fetch Error:", error);
             }
         }
 
+        // Call the fetchJobs function when the page loads
         fetchJobs();
     </script>
 
