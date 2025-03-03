@@ -99,3 +99,5 @@ function loadStudyMaterial() {
 // ✅ **फ़ंक्शन कॉल करें**
 loadJobs();
 loadStudyMaterial();
+<script src="config.js"></script>
+<script src="script.js"></script>
