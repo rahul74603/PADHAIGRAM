@@ -33,6 +33,10 @@
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: left;
+            transition: 0.3s ease;
+        }
+        .job-card:hover {
+            transform: scale(1.02);
         }
         .job-card h3 {
             margin: 0;
@@ -47,6 +51,9 @@
             text-decoration: none;
             color: #007bff;
             font-weight: bold;
+        }
+        .job-card a:hover {
+            text-decoration: underline;
         }
         footer {
             background-color: #007bff;
@@ -67,7 +74,7 @@
     </header>
 
     <!-- Jobs Section -->
-    <div id="jobs">Loading jobs...</div>
+    <div id="jobs">⏳ Loading jobs...</div>
 
     <!-- Footer Section -->
     <footer>
@@ -77,10 +84,10 @@
     <!-- JavaScript to Fetch Jobs from Google Sheets -->
     <script>
         async function fetchJobs() {
-            const sheetId = "YOUR_GOOGLE_SHEET_ID"; // अपना Google Sheet ID डालें
-            const apiKey = "YOUR_GOOGLE_API_KEY";  // अपनी API Key डालें
-            const range = "Sheet1!A2:E"; // यह मानते हुए कि Data Sheet1 में है और A से E तक डाटा है
-            
+            const sheetId = "YOUR_GOOGLE_SHEET_ID"; // ✅ **अपनी Google Sheet ID डालें**
+            const apiKey = "YOUR_GOOGLE_API_KEY";   // ✅ **अपनी API Key डालें**
+            const range = "Sheet1!A2:E"; // ✅ **Sheet1 में A2 से E तक डाटा**
+
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
             try {
@@ -88,25 +95,30 @@
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
                 const data = await response.json();
-                console.log("API Response:", data);
+                console.log("✅ API Response:", data);
 
                 let jobsHTML = '';
-                data.values.forEach(job => {
-                    jobsHTML += `
-                        <div class="job-card">
-                            <h3>${job[0] || 'N/A'}</h3>
-                            <p><strong>Department:</strong> ${job[1] || 'N/A'}</p>
-                            <p><strong>Location:</strong> ${job[2] || 'N/A'}</p>
-                            <p><strong>Last Date:</strong> ${job[3] || 'N/A'}</p>
-                            <a href="${job[4] || '#'}" target="_blank">Apply Now</a>
-                        </div>
-                    `;
-                });
+
+                if (!data.values || data.values.length === 0) {
+                    jobsHTML = "<p>🚫 कोई नौकरी उपलब्ध नहीं है!</p>";
+                } else {
+                    data.values.forEach(job => {
+                        jobsHTML += `
+                            <div class="job-card">
+                                <h3>${job[0] || 'N/A'}</h3>
+                                <p><strong>Department:</strong> ${job[1] || 'N/A'}</p>
+                                <p><strong>Location:</strong> ${job[2] || 'N/A'}</p>
+                                <p><strong>Last Date:</strong> ${job[3] || 'N/A'}</p>
+                                <a href="${job[4] || '#'}" target="_blank">📌 Apply Now</a>
+                            </div>
+                        `;
+                    });
+                }
 
                 document.getElementById('jobs').innerHTML = jobsHTML;
             } catch (error) {
-                document.getElementById('jobs').innerHTML = "❌ जॉब लोड करने में समस्या आई!";
-                console.error("Fetch Error:", error);
+                document.getElementById('jobs').innerHTML = "<p>❌ जॉब लोड करने में समस्या आई! कृपया पुनः प्रयास करें।</p>";
+                console.error("❌ Fetch Error:", error);
             }
         }
 
