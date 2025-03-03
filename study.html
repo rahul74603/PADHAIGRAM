@@ -1,11 +1,116 @@
 <!DOCTYPE html>
-     <html>
-     <head>
-         <title>Study Material - Padhaigram</title>
-         <link rel="stylesheet" href="style.css">
-     </head>
-     <body>
-         <h1>Study Material</h1>
-         <p>Download study materials here.</p>
-     </body>
-     </html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Material - PadhaiGram</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        #materials {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+        }
+        .material-card {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .material-card h3 {
+            margin: 0;
+            color: #333;
+        }
+        .material-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .material-card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>📚 Study Material - PadhaiGram</h1>
+    </header>
+
+    <!-- Study Material Section -->
+    <div id="materials">Loading study materials...</div>
+
+    <!-- Footer Section -->
+    <footer>
+        &copy; 2025 PadhaiGram | All Rights Reserved
+    </footer>
+
+    <!-- JavaScript to Fetch Study Material from Google Sheets -->
+    <script>
+        async function fetchStudyMaterials() {
+            const sheetId = "YOUR_GOOGLE_SHEET_ID"; // अपना Google Sheet ID डालें
+            const apiKey = "YOUR_GOOGLE_API_KEY";  // अपनी API Key डालें
+            const range = "Sheet2!A2:C"; // यह मानते हुए कि Data "Sheet2" में है और A से C तक डाटा है
+            
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                const data = await response.json();
+                console.log("API Response:", data);
+
+                let materialsHTML = '';
+                data.values.forEach(material => {
+                    materialsHTML += `
+                        <div class="material-card">
+                            <h3>${material[0] || 'N/A'}</h3>
+                            <p><strong>Category:</strong> ${material[1] || 'N/A'}</p>
+                            <a href="${material[2] || '#'}" target="_blank">📥 Download PDF</a>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('materials').innerHTML = materialsHTML;
+            } catch (error) {
+                document.getElementById('materials').innerHTML = "❌ स्टडी मटेरियल लोड करने में समस्या आई!";
+                console.error("Fetch Error:", error);
+            }
+        }
+
+        fetchStudyMaterials();
+    </script>
+
+</body>
+</html>
