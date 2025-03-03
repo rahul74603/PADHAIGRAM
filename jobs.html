@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-     <html>
-     <head>
-         <title>Jobs - Padhaigram</title>
-         <link rel="stylesheet" href="style.css">
-     </head>
-     <body>
-         <h1>Job Updates</h1>
-         <p>Latest job updates are posted here.</p>
-     </body>
-     </html>
+<script>
+async function fetchJobs() {
+    const url = 'https://hiringpkblog.p.rapidapi.com/api/jobs'; 
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': 'YOUR_API_KEY_HERE',  // अपनी API Key डालें
+            'X-RapidAPI-Host': 'hiringpkblog.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const jobs = await response.json();
+        let jobList = '<ul>';
+        jobs.forEach(job => {
+            jobList += `<li><strong>${job.title}</strong> - <a href="${job.link}" target="_blank">Apply Now</a></li>`;
+        });
+        jobList += '</ul>';
+        document.getElementById("jobs-container").innerHTML = jobList;
+    } catch (error) {
+        console.error(error);
+        document.getElementById("jobs-container").innerHTML = "Error fetching jobs.";
+    }
+}
+</script>
