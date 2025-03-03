@@ -74,43 +74,31 @@
         &copy; 2025 PadhaiGram | All Rights Reserved
     </footer>
 
-    <!-- JavaScript to Fetch Jobs -->
+    <!-- JavaScript to Fetch Jobs from Google Sheets -->
     <script>
         async function fetchJobs() {
-            const url = 'https://govt-job-at-hiringpkblog.p.rapidapi.com/?Hiingpkblog=Job&Job=Job&GGovt=Gov';
-            const options = {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': '7c2298fe38msh5fa7df0e5c63f13p1bad0djsndc11b07500d6', // Replace with your actual API key
-                    'X-RapidAPI-Host': 'govt-job-at-hiringpkblog.p.rapidapi.com'
-                }
-            };
+            const sheetId = "YOUR_GOOGLE_SHEET_ID"; // अपना Google Sheet ID डालें
+            const apiKey = "YOUR_GOOGLE_API_KEY";  // अपनी API Key डालें
+            const range = "Sheet1!A2:E"; // यह मानते हुए कि Data Sheet1 में है और A से E तक डाटा है
+            
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
             try {
-                const response = await fetch(url, options);
-
-                // Check if the response is successful
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
                 const data = await response.json();
                 console.log("API Response:", data);
 
-                // Check if data is an array
-                if (!Array.isArray(data)) {
-                    throw new Error("API response is not an array.");
-                }
-
                 let jobsHTML = '';
-                data.forEach(job => {
+                data.values.forEach(job => {
                     jobsHTML += `
                         <div class="job-card">
-                            <h3>${job.title || 'N/A'}</h3>
-                            <p><strong>Department:</strong> ${job.department || 'N/A'}</p>
-                            <p><strong>Location:</strong> ${job.location || 'N/A'}</p>
-                            <p><strong>Last Date:</strong> ${job.last_date || 'N/A'}</p>
-                            <a href="${job.link || '#'}" target="_blank">Apply Now</a>
+                            <h3>${job[0] || 'N/A'}</h3>
+                            <p><strong>Department:</strong> ${job[1] || 'N/A'}</p>
+                            <p><strong>Location:</strong> ${job[2] || 'N/A'}</p>
+                            <p><strong>Last Date:</strong> ${job[3] || 'N/A'}</p>
+                            <a href="${job[4] || '#'}" target="_blank">Apply Now</a>
                         </div>
                     `;
                 });
@@ -122,7 +110,6 @@
             }
         }
 
-        // Call the fetchJobs function when the page loads
         fetchJobs();
     </script>
 
